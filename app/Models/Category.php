@@ -12,10 +12,16 @@ class Category extends Model
 
     protected $fillable = ['name', 'slug', 'parent_id'];
     protected $table = 'categories';
+    protected $with = ['movies', 'children'];
 
     public function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id', 'id');
+    }
+
+    public function movies(): HasMany
+    {
+        return $this->hasMany(Movie::class, 'category_id', 'id');
     }
 
     public function getRouteKeyName(): string

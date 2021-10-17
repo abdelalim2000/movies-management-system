@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Categories;
 
+use App\Http\Resources\Movies\MovieResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,8 +19,8 @@ class CategoryResource extends JsonResource
         return [
             'name' => $this->name,
             'slug' => $this->slug,
-            'parent_id' => $this->parent_id,
-            'updated_at' => $this->updated_at,
+            'sup_categories' => CategoryResource::collection($this->whenLoaded('children')),
+            'movies' => MovieResource::collection($this->whenLoaded('movies')),
         ];
     }
 }

@@ -23,7 +23,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function index()
     {
-        $categories = $this->categoryModel->query()->with('children')->whereNull('parent_id')->get();
+        $categories = $this->categoryModel->query()->whereNull('parent_id')->get();
         return CategoryResource::collection($categories)
             ->additional(['status' => 'Success'])
             ->response()

@@ -32,4 +32,12 @@ trait UploadImageTrait
         }
         return null;
     }
+
+    public function imageDelete($path, $image_id)
+    {
+        if (File::exists(public_path($path))) {
+            File::delete(public_path($path));
+        }
+        return Image::query()->find($image_id)->delete();
+    }
 }
