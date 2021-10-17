@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\AuthUserController;
 use App\Http\Controllers\Api\Categories\CategoryController;
 use App\Http\Controllers\Api\Movies\MovieController;
+use App\Http\Controllers\Api\Plans\PlanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,5 @@ Route::group(['prefix' => 'v1/users', 'middleware' => ['auth:sanctum']], functio
 Route::apiResource('v1/categories', CategoryController::class);
 
 Route::apiResource('v1/movies', MovieController::class);
+
+Route::apiResource('v1/plans', PlanController::class);

@@ -18,6 +18,7 @@ class CreateMoviesTable extends Migration
             $table->string('title')->unique();
             $table->string('slug')->index();
             $table->text('description');
+            $table->string('video');
             $table->foreignId('category_id')->nullable()->references('id')->on('categories')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();

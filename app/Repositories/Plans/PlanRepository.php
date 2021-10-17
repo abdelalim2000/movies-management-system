@@ -1,54 +1,52 @@
 <?php
 
-namespace App\Repositories\Categories;
+namespace App\Repositories\Plans;
 
-use App\Http\Resources\Categories\CategoryResource;
-use App\Interfaces\Categories\CategoryRepositoryInterface;
-use App\Models\Category;
+use App\Http\Resources\Plans\PlanResource;
+use App\Interfaces\Plans\PlanRepositoryInterface;
+use App\Models\Plan;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class CategoryRepository implements CategoryRepositoryInterface
+class PlanRepository implements PlanRepositoryInterface
 {
-    protected $categoryModel;
+    protected $planModel;
 
-    /**
-     * @param Category $categoryModel
-     */
-    public function __construct(Category $categoryModel)
+    public function __construct(Plan $planModel)
     {
-        $this->categoryModel = $categoryModel;
+        $this->planModel = $planModel;
     }
 
     public function index()
     {
-        $categories = $this->categoryModel->query()->whereNull('parent_id')->get();
-        return CategoryResource::collection($categories)
+        $plans = $this->planModel->query()->get();
+        return PlanResource::collection($plans)
             ->additional(['status' => 'Success'])
             ->response()
             ->setStatusCode(200);
     }
 
-    public function show($category)
+    public function show($plan)
     {
-        return (new CategoryResource($category))
+        return (new PlanResource($plan))
             ->additional(['status' => 'Success'])
             ->response()
             ->setStatusCode(200);
     }
 
-    public function create($categoryRequest)
+    public function store($planCreateRequest)
     {
         DB::beginTransaction();
         try {
-            $category = $this->categoryModel->query()->create([
-                'name' => $categoryRequest->name,
-                'slug' => Str::slug($categoryRequest->slug),
-                'parent_id' => $categoryRequest->parent_id,
+            $plan = $this->planModel->query()->create([
+                'name' => $planCreateRequest->name,
+                'slug' => Str::slug($planCreateRequest->slug),
+                'price' => $planCreateRequest->price,
+                'duration_months' => $planCreateRequest->duration_months,
             ]);
             DB::commit();
-            return (new CategoryResource($category))
+            return PlanResource::make($plan)
                 ->additional(['status' => 'Success'])
                 ->response()
                 ->setStatusCode(201);
@@ -58,17 +56,18 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
     }
 
-    public function update($categoryRequest, $category)
+    public function update($planUpdateRequest, $plan)
     {
         DB::beginTransaction();
         try {
-            $category->update([
-                'name' => $categoryRequest->name,
-                'slug' => Str::slug($categoryRequest->slug),
-                'parent_id' => $categoryRequest->parent_id,
+            $plan->update([
+                'name' => $planUpdateRequest->name,
+                'slug' => Str::slug($planUpdateRequest->slug),
+                'price' => $planUpdateRequest->price,
+                'duration_months' => $planUpdateRequest->duration_months,
             ]);
             DB::commit();
-            return (new CategoryResource($category))
+            return PlanResource::make($plan)
                 ->additional(['status' => 'Success'])
                 ->response()
                 ->setStatusCode(201);
@@ -78,11 +77,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
     }
 
-    public function delete($category)
+    public function delete($plan)
     {
         DB::beginTransaction();
         try {
-            $category->delete();
+            $plan->delete();
             DB::commit();
             return response()->noContent();
         } catch (Exception $e) {

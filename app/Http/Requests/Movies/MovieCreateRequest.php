@@ -28,6 +28,7 @@ class MovieCreateRequest extends FormRequest
             'title' => ['required', 'string', 'min:3', Rule::unique('movies', 'title')],
             'slug' => ['required', 'string', 'min:3', Rule::unique('movies', 'slug')],
             'description' => ['required', 'string', 'min:3'],
+            'video' => ['required', 'url'],
             'category_id' => ['required', 'integer', Rule::exists('categories', 'id')],
             'paid' => ['sometimes'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png']

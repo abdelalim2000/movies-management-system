@@ -16,6 +16,7 @@ class MovieResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description,
             'category' => CategoryResource::make($this->whenLoaded('category')),
+            'video' => $this->video,
             'image' => ImageResource::make($this->whenLoaded('image')),
             'paid' => $this->paid ? 'Paid Movie' : 'Free Movie'
         ];

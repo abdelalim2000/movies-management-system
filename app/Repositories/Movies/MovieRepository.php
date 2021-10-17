@@ -36,7 +36,8 @@ class MovieRepository implements MovieRepositoryInterface
     public function show($movie): MovieResource
     {
         $movie->load('category');
-        return MovieResource::make($movie);
+        return MovieResource::make($movie)
+            ->additional(['status' => 'Success']);
     }
 
     public function store($movieCreateRequest)
@@ -47,6 +48,7 @@ class MovieRepository implements MovieRepositoryInterface
                 'title' => $movieCreateRequest->title,
                 'slug' => Str::slug($movieCreateRequest->slug),
                 'description' => $movieCreateRequest->description,
+                'video' => $movieCreateRequest->video,
                 'category_id' => $movieCreateRequest->category_id,
                 'paid' => (bool)$movieCreateRequest->paid
             ]);
@@ -59,7 +61,7 @@ class MovieRepository implements MovieRepositoryInterface
                 ->setStatusCode(201);
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'failed', 'error' => $e->getMessage()], 416);
+            return response()->json(['status' => 'Failed', 'error' => $e->getMessage()], $e->getCode());
         }
     }
 
@@ -71,6 +73,7 @@ class MovieRepository implements MovieRepositoryInterface
                 'title' => $movieUpdateRequest->title,
                 'slug' => Str::slug($movieUpdateRequest->slug),
                 'description' => $movieUpdateRequest->description,
+                'video' => $movieUpdateRequest->video,
                 'category_id' => $movieUpdateRequest->category_id,
                 'paid' => (bool)$movieUpdateRequest->paid
             ]);
@@ -85,7 +88,7 @@ class MovieRepository implements MovieRepositoryInterface
                 ->setStatusCode(201);
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'failed', 'error' => $e->getMessage()], 416);
+            return response()->json(['status' => 'Failed', 'error' => $e->getMessage()], $e->getCode());
         }
     }
 
@@ -99,7 +102,7 @@ class MovieRepository implements MovieRepositoryInterface
             return response()->noContent();
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'failed', 'error' => $e->getMessage()], 416);
+            return response()->json(['status' => 'Failed', 'error' => $e->getMessage()], $e->getCode());
         }
     }
 }

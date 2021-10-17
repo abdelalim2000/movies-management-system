@@ -12,7 +12,7 @@ class Movie extends Model
     use HasFactory;
 
     protected $table = 'movies';
-    protected $fillable = ['title', 'slug', 'description', 'category_id', 'paid'];
+    protected $fillable = ['title', 'slug', 'description', 'video','category_id', 'paid'];
     protected $with = ['image'];
 
     public function image(): MorphOne
